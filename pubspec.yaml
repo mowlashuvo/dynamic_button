@@ -1,7 +1,11 @@
 name: dynamic_button
-description: "A new Flutter package project."
-version: 0.0.6
-homepage:
+description: "A customizable Flutter widget that simplifies creating dynamic containers with various styles, animations, and behaviors. Ideal for creating interactive UI elements with ease."
+version: 0.0.7
+homepage: https://github.com/mowlashuvo/dynamic_button
+repository: https://github.com/mowlashuvo/dynamic_button
+
+example:
+  path: example/
 
 environment:
   sdk: ">=2.12.0 <4.0.0"

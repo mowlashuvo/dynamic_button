@@ -6,7 +6,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-
   const MyApp({super.key});
 
   @override
@@ -27,9 +26,13 @@ class ExamplePage extends StatelessWidget {
       appBar: AppBar(
         title: Text('DynamicButton Example'),
       ),
-      body: const Center(
+      body: Center(
         child: DynamicButton(
-          list: ['Option 1', 'Option 2', 'Option 3'], // Example data
+          onTap: (String label) {
+            // Handle button tap with button label
+            print('Tapped button: $label');
+          },
+          list: const ['Option 1', 'Option 2', 'Option 3'], // Example data
           selectedColor: Colors.red,
           color: Colors.blueAccent,
           borderColor: Colors.black,

@@ -1,39 +1,56 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Dynamic Button
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
+`dynamic_button` is a customizable button widget for Flutter that allows you to create dynamic and
+interactive buttons with various design and behavior options. This widget supports dynamic lists,
+customizable borders, colors, text styles, and selectable states using checkboxes.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
+### Features
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+- **Customizable Background Color**: Set the button's background color with the color property.
+- **Adjustable Border**: Define border color and width using borderColor and border properties.
+- **Rounded Corners**: Customize the border radius to achieve rounded corners with the radius property.
+- **Elevation**: Apply elevation to give the button a raised effect with the elevation property.
+- **Flexible Height**: Specify the height for the button using the height property.
+- **Dynamic List of Buttons**: Generate a horizontal list of buttons based on the provided list of strings via the list property.
+- **Selectable Buttons**: Integrate checkboxes into the buttons to allow selection.
+- **Custom Text Style**: Use the titleStyle property to define the font size, weight, and color of the button labels.
 
-## Features
-
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
 
 ```dart
-const like = 'sample';
-```
 
-## Additional information
+import 'package:flutter/material.dart';
+import 'package:dynamic_button/dynamic_button.dart';
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(title: Text('DynamicButton Example')),
+        body: Center(
+          child: DynamicButton(
+            list: ['Option 1', 'Option 2', 'Option 3'],
+            color: Colors.blue,
+            borderColor: Colors.blueAccent,
+            border: 2,
+            radius: 12,
+            elevation: 5,
+            height: 50,
+            labelStyle: TextStyle(
+              fontSize: 14,
+              color: Colors.white,
+            ),
+            onTap: (String label) {
+              // Handle button tap with button label
+              print('Tapped button: $label');
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}

@@ -71,11 +71,13 @@ class DynamicButton extends StatefulWidget {
   /// Defaults to [Colors.white].
   final Color checkboxBorderColor;
 
+  final void Function(String) onTap;
+
   /// Creates a [DynamicButton] widget with customizable options.
   ///
   /// The [list] parameter is required as it contains the labels for the buttons.
   const DynamicButton({
-    super.key,
+    Key? key,
     required this.list,
     this.height = 40,
     this.color = Colors.white,
@@ -89,7 +91,8 @@ class DynamicButton extends StatefulWidget {
     this.checkboxCheckColor = Colors.white,
     this.checkboxActiveColor = Colors.blue,
     this.checkboxBorderColor = Colors.white,
-  });
+    required this.onTap,
+  }) : super(key: key);
 
   @override
   State<DynamicButton> createState() => _DynamicButtonState();
@@ -131,6 +134,8 @@ class _DynamicButtonState extends State<DynamicButton> {
                 setState(() {
                   _selectedIndex = index;
                 });
+                widget.onTap(
+                    widget.list[index]); // Call the callback with button label
               },
               customBorder: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(widget.radius),
@@ -145,7 +150,8 @@ class _DynamicButtonState extends State<DynamicButton> {
                         checkColor: widget.checkboxCheckColor,
                         activeColor: widget.checkboxActiveColor,
                         side: BorderSide(
-                          color: widget.checkboxBorderColor, // Use the custom border color
+                          color: widget.checkboxBorderColor,
+                          // Use the custom border color
                           width: 2.0,
                         ),
                         value: _selectedIndex == index,

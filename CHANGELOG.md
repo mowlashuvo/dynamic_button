@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.1
+
+### Fixed
+
+- Updated package metadata for pub.dev publishing.
+- Improved package compatibility and validation.
+- Updated documentation and examples.
+
+---
+
 ## 1.0.0
 
 ### Breaking Changes

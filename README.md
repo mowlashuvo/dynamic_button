@@ -67,7 +67,7 @@ Add this to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  dynamic_button: ^0.1.0
+  dynamic_button: ^1.0.0
 ```
 
 Then:

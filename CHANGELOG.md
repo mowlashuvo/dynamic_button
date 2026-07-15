@@ -2,33 +2,48 @@
 
 All notable changes to this project will be documented in this file.
 
-## 0.2.0
+## 1.0.0
 
-### 🚀 Improvements
+### 🚀 Breaking Changes
 
-- Updated README documentation.
-- Improved package description and pub.dev metadata.
-- Added better examples and usage documentation.
-- Improved DynamicButton API documentation.
-- Improved generic item support documentation.
-- Updated package structure for production release.
+- Replaced `list` parameter with generic `items`.
+- Changed API from `DynamicButton` simple widget to generic `DynamicButton<T>`.
+- Replaced individual styling parameters with `DynamicButtonStyle`.
+- Replaced fixed UI rendering with customizable `itemBuilder`.
+- Changed callback signature:
+    - Old:
+      ```dart
+      onTap(String item)
+      ```
 
-### ✨ Features
+    - New:
+      ```dart
+      onTap(T item, int index)
+      ```
 
-- Generic `DynamicButton<T>` support.
-- Custom item builder support.
-- Single and multiple selection modes.
-- Controller-based selection management.
-- Custom styles and themes.
-- Gradient backgrounds.
-- Animation support.
-- Segmented control style support.
-- Chip/filter style support.
+### ✨ New Features
 
-## 0.1.0
+- Added generic item support.
+- Added custom widget rendering.
+- Added selection controller.
+- Added single selection mode.
+- Added multiple selection mode.
+- Added segmented control support.
+- Added chip/filter style support.
+- Added gradient backgrounds.
+- Added border customization.
+- Added shadow support.
+- Added animation configuration.
+- Added theme support.
+- Added dark mode compatibility.
 
-### Initial production release
+### 🏗 Architecture
 
-- Added redesigned DynamicButton architecture.
-- Added customizable UI components.
-- Added selection behavior system.
+- Introduced scalable package structure.
+- Added separated models, controllers, components, and enums.
+- Improved API documentation.
+- Improved example application.
+
+## 0.0.7
+
+- Previous simple button implementation.

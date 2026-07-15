@@ -1,113 +1,92 @@
 import 'package:flutter/material.dart';
 
-/// A dynamic button widget that displays a horizontal list of buttons.
-///
-/// Each button can be customized in terms of height, color, border,
-/// radius, elevation, and label style. The button selection state is managed internally.
-class DynamicButton extends StatefulWidget {
-  /// The height of the button.
-  ///
-  /// Defaults to 40.
+enum DynamicButtonMode {
+  single,
+  multiple,
+}
+
+class DynamicButton<T> extends StatefulWidget {
+  /// Generic items list
+  final List<T> items;
+
+  /// How to display each item (IMPORTANT FOR GENERIC SUPPORT)
+  final Widget Function(
+    BuildContext context,
+    T item,
+    bool selected,
+    int index,
+  ) itemBuilder;
+
   final double height;
 
-  /// The list of strings that will be displayed as the label of each button.
-  ///
-  /// This is a required parameter.
-  final List<String> list;
-
-  /// The background color of the button.
-  ///
-  /// Defaults to [Colors.white].
   final Color color;
-
-  /// The color of the button's border.
-  ///
-  /// Defaults to [Colors.white].
   final Color borderColor;
-
-  /// The width of the button's border.
-  ///
-  /// Defaults to 0, indicating no border.
   final double border;
-
-  /// The radius of the button's corners.
-  ///
-  /// Defaults to 0, indicating no rounded corners.
   final double radius;
-
-  /// The elevation of the button.
-  ///
-  /// Controls the shadow depth of the button.
-  /// Defaults to 0, indicating no shadow.
   final double elevation;
 
-  /// The style of the button's label text.
-  ///
-  /// Defaults to [TextStyle] with a font size of 14.
-  final TextStyle? labelStyle;
+  final Color selectedColor;
 
-  /// The color of the button when it is selected.
-  ///
-  /// Defaults to [Colors.blueAccent].
-  final Color? selectedColor;
+  final DynamicButtonMode mode;
 
-  /// Whether to display a checkbox inside the button.
-  ///
-  /// Defaults to `true`.
-  final bool isCheckbox;
+  final bool showCheckbox;
 
-  /// The color of the check inside the checkbox.
-  ///
-  /// Defaults to [Colors.white].
   final Color checkboxCheckColor;
-
-  /// The color of the checkbox when it is active (selected).
-  ///
-  /// Defaults to [Colors.blue].
   final Color checkboxActiveColor;
-
-  /// The color of the checkbox border.
-  ///
-  /// Defaults to [Colors.white].
   final Color checkboxBorderColor;
 
-  final void Function(String) onTap;
+  final void Function(T item, int index) onTap;
 
-  /// Creates a [DynamicButton] widget with customizable options.
-  ///
-  /// The [list] parameter is required as it contains the labels for the buttons.
   const DynamicButton({
-    Key? key,
-    required this.list,
+    super.key,
+    required this.items,
+    required this.itemBuilder,
+    required this.onTap,
     this.height = 40,
     this.color = Colors.white,
     this.borderColor = Colors.white,
     this.border = 0,
     this.radius = 0,
     this.elevation = 0,
-    this.labelStyle,
-    this.selectedColor,
-    this.isCheckbox = true,
+    this.selectedColor = Colors.blue,
+    this.mode = DynamicButtonMode.single,
+    this.showCheckbox = true,
     this.checkboxCheckColor = Colors.white,
     this.checkboxActiveColor = Colors.blue,
     this.checkboxBorderColor = Colors.white,
-    required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
-  State<DynamicButton> createState() => _DynamicButtonState();
+  State<DynamicButton<T>> createState() => _DynamicButtonState<T>();
 }
 
-class _DynamicButtonState extends State<DynamicButton> {
-  // Tracks the index of the selected button.
+class _DynamicButtonState<T> extends State<DynamicButton<T>> {
   int _selectedIndex = 0;
-  Color? buttonColor;
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    buttonColor = widget.color;
+  final Set<int> _selectedIndexes = {};
+
+  bool _isSelected(int index) {
+    if (widget.mode == DynamicButtonMode.single) {
+      return _selectedIndex == index;
+    } else {
+      return _selectedIndexes.contains(index);
+    }
+  }
+
+  void _handleTap(int index) {
+    setState(() {
+      if (widget.mode == DynamicButtonMode.single) {
+        _selectedIndex = index;
+      } else {
+        if (_selectedIndexes.contains(index)) {
+          _selectedIndexes.remove(index);
+        } else {
+          _selectedIndexes.add(index);
+        }
+      }
+    });
+
+    widget.onTap(widget.items[index], index);
   }
 
   @override
@@ -116,64 +95,54 @@ class _DynamicButtonState extends State<DynamicButton> {
       height: widget.height,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
+        itemCount: widget.items.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 10),
         itemBuilder: (context, index) {
-          if (widget.selectedColor != null) {
-            buttonColor =
-                _selectedIndex == index ? widget.selectedColor : widget.color;
-          }
+          final item = widget.items[index];
+          final selected = _isSelected(index);
+
           return Card(
             margin: EdgeInsets.zero,
             elevation: widget.elevation,
-            color: buttonColor ?? widget.color,
+            color: selected ? widget.selectedColor : widget.color,
             shape: RoundedRectangleBorder(
-              side: BorderSide(color: widget.borderColor, width: widget.border),
+              side: BorderSide(
+                color: widget.borderColor,
+                width: widget.border,
+              ),
               borderRadius: BorderRadius.circular(widget.radius),
             ),
             child: InkWell(
-              onTap: () {
-                setState(() {
-                  _selectedIndex = index;
-                });
-                widget.onTap(
-                    widget.list[index]); // Call the callback with button label
-              },
-              customBorder: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(widget.radius),
-              ),
+              borderRadius: BorderRadius.circular(widget.radius),
+              onTap: () => _handleTap(index),
               child: Container(
-                padding: const EdgeInsets.only(right: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    if (widget.isCheckbox)
+                    if (widget.showCheckbox)
                       Checkbox(
+                        value: selected,
                         checkColor: widget.checkboxCheckColor,
                         activeColor: widget.checkboxActiveColor,
                         side: BorderSide(
                           color: widget.checkboxBorderColor,
-                          // Use the custom border color
-                          width: 2.0,
+                          width: 2,
                         ),
-                        value: _selectedIndex == index,
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedIndex = index;
-                          });
-                        },
+                        onChanged: (_) => _handleTap(index),
                       ),
-                    Text(widget.list[index], style: widget.labelStyle),
+                    widget.itemBuilder(
+                      context,
+                      item,
+                      selected,
+                      index,
+                    ),
                   ],
                 ),
               ),
             ),
           );
         },
-        separatorBuilder: (context, index) {
-          return const SizedBox(
-            width: 10,
-          );
-        },
-        itemCount: widget.list.length,
       ),
     );
   }

@@ -1,6 +1,6 @@
 name: dynamic_button
 description: A production-ready Flutter UI library for building customizable buttons, chips, segmented controls, filter buttons, and selectable components with animations, themes, and generic item support.
-version: 0.1.0
+version: 0.2.0
 
 homepage: https://github.com/mowlashuvo/dynamic_button
 repository: https://github.com/mowlashuvo/dynamic_button
